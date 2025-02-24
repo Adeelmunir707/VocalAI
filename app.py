@@ -7,7 +7,7 @@ from TTS.api import TTS
 
 # Load API key from Streamlit secrets
 def get_api_key():
-    return st.secrets["GROQ_API_KEY"]
+    return st.secrets["groq_api"]
 
 # LLM Response Function
 def get_llm_response(api_key, user_input):
