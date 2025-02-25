@@ -6,3 +6,5 @@ TTS
 numpy
 soundfile
 pydub
+streamlit-webrtc
+av
