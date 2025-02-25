@@ -6,6 +6,7 @@ from groq import Groq
 from TTS.api import TTS
 from tempfile import NamedTemporaryFile
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, ClientSettings
+import av
 
 # LLM Response Function
 def get_llm_response(api_key, user_input):
@@ -54,6 +55,21 @@ def generate_speech(text, output_file, speaker_wav, language="en", use_gpu=True)
         language=language,
     )
 
+# Audio Frame Processing
+class AudioProcessor:
+    def __init__(self):
+        self.audio_frames = []
+
+    def recv(self, frame):
+        self.audio_frames.append(frame.to_ndarray().tobytes())
+        return frame
+
+    def save_audio(self, file_path):
+        with open(file_path, "wb") as f:
+            for frame in self.audio_frames:
+                f.write(frame)
+        return file_path
+
 # Streamlit App
 def main():
     st.set_page_config(page_title="Vocal AI", layout="wide")
@@ -62,17 +78,25 @@ def main():
     # User option for reference audio (Record or Upload)
     ref_audio_choice = st.sidebar.radio("Reference Audio", ("Upload", "Record"))
 
-    reference_audio = None
     ref_audio_path = None
+    reference_audio_processor = None
 
     if ref_audio_choice == "Upload":
         reference_audio = st.sidebar.file_uploader("Upload Reference Audio", type=["wav", "mp3", "ogg"])
+        if reference_audio:
+            with NamedTemporaryFile(delete=False, suffix=".wav") as temp_ref_audio:
+                temp_ref_audio.write(reference_audio.read())
+                ref_audio_path = temp_ref_audio.name
     else:
         st.sidebar.write("Record your reference audio:")
-        ref_audio_recorder = webrtc_streamer(
+        reference_audio_processor = AudioProcessor()
+        webrtc_streamer(
             key="ref_audio",
-            mode=WebRtcMode.SENDONLY,
+            mode=WebRtcMode.SENDRECV,
             client_settings=ClientSettings(rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+            audio_receiver_size=1024,
+            video_processor_factory=None,
+            audio_processor_factory=lambda: reference_audio_processor,
         )
 
     st.title("Welcome to VocaL AI")
@@ -85,38 +109,40 @@ def main():
     # User Input (Text or Audio)
     input_type = st.radio("Choose Input Type", ("Text", "Audio"))
     user_input = None
+    user_audio_processor = None
 
     if input_type == "Text":
         user_input = st.text_area("Enter your text here")
     else:
         st.write("Record your voice:")
-        user_audio_recorder = webrtc_streamer(
+        user_audio_processor = AudioProcessor()
+        webrtc_streamer(
             key="user_audio",
-            mode=WebRtcMode.SENDONLY,
+            mode=WebRtcMode.SENDRECV,
             client_settings=ClientSettings(rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+            audio_receiver_size=1024,
+            video_processor_factory=None,
+            audio_processor_factory=lambda: user_audio_processor,
         )
 
     if st.button("Generate Speech"):
         # Handle Reference Audio
-        if reference_audio:
+        if reference_audio_processor:
             with NamedTemporaryFile(delete=False, suffix=".wav") as temp_ref_audio:
-                temp_ref_audio.write(reference_audio.read())
+                reference_audio_processor.save_audio(temp_ref_audio.name)
                 ref_audio_path = temp_ref_audio.name
-        elif ref_audio_recorder and ref_audio_recorder.audio_receiver:
-            ref_audio_path = ref_audio_recorder.audio_receiver.get_audio_frame()
 
         if not ref_audio_path:
             st.error("Please upload or record reference audio.")
             return
 
         # Handle User Input
-        if input_type == "Audio" and user_audio_recorder and user_audio_recorder.audio_receiver:
-            user_input_audio = user_audio_recorder.audio_receiver.get_audio_frame()
-            if user_input_audio:
+        if input_type == "Audio":
+            if user_audio_processor:
                 with NamedTemporaryFile(delete=False, suffix=".wav") as temp_user_audio:
-                    temp_user_audio.write(user_input_audio)
+                    user_audio_processor.save_audio(temp_user_audio.name)
                     user_input = transcribe_audio(temp_user_audio.name)
-                os.unlink(temp_user_audio.name)
+                    os.unlink(temp_user_audio.name)
 
         if not user_input:
             st.error("Please enter text or record audio.")
