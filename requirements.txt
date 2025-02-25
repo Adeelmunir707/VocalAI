@@ -3,3 +3,6 @@ torch
 whisper
 groq
 TTS
+numpy
+soundfile
+pydub
