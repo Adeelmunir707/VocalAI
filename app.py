@@ -4,12 +4,9 @@ import whisper
 import streamlit as st
 from groq import Groq
 from TTS.api import TTS
+from tempfile import NamedTemporaryFile
+from google.colab import userdata
 
-# Load API key from Streamlit secrets
-def get_api_key():
-    return st.secrets["groq_api"]
-
-# LLM Response Function
 def get_llm_response(api_key, user_input):
     client = Groq(api_key=api_key)
     chat_completion = client.chat.completions.create(
@@ -23,16 +20,13 @@ def get_llm_response(api_key, user_input):
         stop=None,
         stream=False,
     )
-    response = chat_completion.choices[0].message.content
-    return response
+    return chat_completion.choices[0].message.content
 
-# Transcribe Audio File using Whisper
 def transcribe_audio(audio_path, model_size="base"):
     model = whisper.load_model(model_size)
     result = model.transcribe(audio_path)
     return result["text"]
 
-# Generate Speech from Text
 def generate_speech(text, output_file, speaker_wav, language="en", use_gpu=True):
     tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=use_gpu)
     tts.tts_to_file(
@@ -42,52 +36,44 @@ def generate_speech(text, output_file, speaker_wav, language="en", use_gpu=True)
         language=language,
     )
 
-# Streamlit UI
-st.title("🎙️ AI Voice Assistant")
-st.markdown("Upload an audio file or enter text, and the AI will generate a response.")
-
-api_key = get_api_key()
-
-# Input Selection
-input_type = st.radio("Choose Input Type:", ["Text", "Audio"])
-
-if input_type == "Text":
-    user_text = st.text_area("Enter text:")
-    if st.button("Generate Response"):
-        if user_text.strip():
-            response = get_llm_response(api_key, user_text)
-            st.subheader("📝 AI Response")
-            st.write(response)
-            
-            # TTS Generation
-            speaker_wav = "reference_voice.ogg"  # Replace with a valid speaker sample
-            output_audio_path = "output_response.wav"
-            generate_speech(response, output_audio_path, speaker_wav)
-            
-            st.audio(output_audio_path, format="audio/wav")
-        else:
-            st.error("Please enter some text.")
-
-elif input_type == "Audio":
-    audio_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "ogg"])
-    if audio_file and st.button("Transcribe & Generate Response"):
-        with open("input_audio.wav", "wb") as f:
-            f.write(audio_file.read())
-
-        # Transcribe
-        st.info("Transcribing audio...")
-        transcribed_text = transcribe_audio("input_audio.wav")
-        st.subheader("🎤 Transcription")
-        st.write(transcribed_text)
-
-        # Get AI Response
-        response = get_llm_response(api_key, transcribed_text)
-        st.subheader("📝 AI Response")
-        st.write(response)
+def main():
+    st.set_page_config(page_title="VocaGenie", layout="wide")
+    
+    st.sidebar.title("VocaGenie Settings")
+    reference_audio = st.sidebar.file_uploader("Upload Reference Audio", type=["wav", "mp3", "ogg"])
+    
+    st.title("Welcome to VocaGenie")
+    st.write("### How to Use")
+    st.write("1. Upload a reference audio file from the sidebar.")
+    st.write("2. Choose between text input or audio input.")
+    st.write("3. If audio input is selected, record and submit your audio.")
+    st.write("4. Click the 'Generate Speech' button to hear the AI response in the cloned voice.")
+    
+    input_type = st.radio("Choose Input Type", ("Text", "Audio"))
+    user_input = None
+    
+    if input_type == "Text":
+        user_input = st.text_area("Enter your text here")
+    else:
+        uploaded_audio = st.file_uploader("Upload Audio Input", type=["wav", "mp3", "ogg"])
+        if uploaded_audio:
+            with NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+                temp_audio.write(uploaded_audio.read())
+                user_input = transcribe_audio(temp_audio.name)
+            os.unlink(temp_audio.name)
+    
+    if st.button("Generate Speech") and reference_audio and user_input:
+        with NamedTemporaryFile(delete=False, suffix=".wav") as temp_ref_audio:
+            temp_ref_audio.write(reference_audio.read())
+            ref_audio_path = temp_ref_audio.name
         
-        # TTS Generation
-        speaker_wav = "reference_voice.ogg"  # Replace with a valid speaker sample
-        output_audio_path = "output_response.wav"
-        generate_speech(response, output_audio_path, speaker_wav)
-
+        api_key = userdata.get('groq')
+        response_text = get_llm_response(api_key, user_input)
+        output_audio_path = "output_speech.wav"
+        generate_speech(response_text, output_audio_path, ref_audio_path)
+        os.unlink(ref_audio_path)
+        
         st.audio(output_audio_path, format="audio/wav")
+
+if __name__ == "__main__":
+    main()
