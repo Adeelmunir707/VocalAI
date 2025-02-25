@@ -36,12 +36,12 @@ def generate_speech(text, output_file, speaker_wav, language="en", use_gpu=True)
     )
 
 def main():
-    st.set_page_config(page_title="VocaGenie", layout="wide")
+    st.set_page_config(page_title="Vocal AI", layout="wide")
     
-    st.sidebar.title("VocaGenie Settings")
+    st.sidebar.title("Vocal-AI Settings")
     reference_audio = st.sidebar.file_uploader("Upload Reference Audio", type=["wav", "mp3", "ogg"])
     
-    st.title("Welcome to VocaGenie")
+    st.title("Welcome to VocaL AI")
     st.write("### How to Use")
     st.write("1. Upload a reference audio file from the sidebar.")
     st.write("2. Choose between text input or audio input.")
