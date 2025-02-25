@@ -5,7 +5,6 @@ import streamlit as st
 from groq import Groq
 from TTS.api import TTS
 from tempfile import NamedTemporaryFile
-from google.colab import userdata
 
 def get_llm_response(api_key, user_input):
     client = Groq(api_key=api_key)
@@ -67,7 +66,9 @@ def main():
             temp_ref_audio.write(reference_audio.read())
             ref_audio_path = temp_ref_audio.name
         
-        api_key = userdata.get('groq')
+        # Retrieve API Key from Streamlit secrets
+        api_key = st.secrets["GROQ_API_KEY"]
+        
         response_text = get_llm_response(api_key, user_input)
         output_audio_path = "output_speech.wav"
         generate_speech(response_text, output_audio_path, ref_audio_path)
