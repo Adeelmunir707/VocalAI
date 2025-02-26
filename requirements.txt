@@ -1,10 +1,9 @@
 streamlit
 torch
 whisper
-groq
 TTS
-numpy
-soundfile
+groq
 pydub
-streamlit-webrtc
-av
+streamlit-option-menu
+tempfile
+os
