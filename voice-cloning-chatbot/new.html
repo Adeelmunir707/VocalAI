@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eleven Labs Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: #1a1a1a;
+            padding: 15px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links li {
+            display: inline;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffcc00;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            background: #ffcc00;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+
+        .menu-toggle svg {
+            stroke: white;
+        }
+
+        .hero {
+            text-align: left;
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 0 20px;
+            background: linear-gradient(135deg, #1a1a1a, #121212);
+            padding: 50px 20px;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .hero .cta-button {
+            background: white;
+            color: black;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .hero .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* New Section Styles */
+        .ai-agents-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(90deg, #4a90e2, #d3e0ea);
+            border-radius: 15px;
+            overflow: hidden;
+            color: #000;
+        }
+
+        .ai-agents-text {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .ai-agents-text h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .ai-agents-text p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .ai-agents-buttons button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 20px;
+            background: #000;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .ai-agents-buttons button:hover {
+            background-color: #333;
+        }
+
+        .ai-agents-diagram {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ai-agents-diagram .step {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            font-weight: bold;
+        }
+
+        .ai-agents-diagram .arrow {
+            position: relative;
+            top: -10px;
+            color: #000;
+        }
+
+        /* Voice Cloning Interface Styles */
+        .voice-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-buttons-voice {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn-voice {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #2c2c2c;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn-voice.active {
+            background-color: #ffcc00;
+            color: black;
+        }
+
+        .nav-btn-voice:hover {
+            background-color: #3a3a3a;
+        }
+
+        .sections {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section {
+            display: none;
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .voice-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile img {
+            border-radius: 50%;
+        }
+
+        .profile span {
+            font-size: 14px;
+            color: white;
+        }
+
+        .original {
+            color: #ccc;
+        }
+
+        .clone {
+            color: #999;
+        }
+
+        .clone-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .play-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+            color: #ffcc00;
+            transition: transform 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .section h2 {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: white;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e6b800;
+        }
+
+        select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: white;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        /* Modal Styles (Integrated Sign-In/Sign-Up Modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a0072, #121212);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(26, 26, 26, 0.9);
+            margin: 5% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .modal .auth-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2c2c2c;
+            padding-bottom: 10px;
+        }
+
+        .auth-tabs button {
+            background: none;
+            border: none;
+            color: #999;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s, background-color 0.3s;
+            margin: 0 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .auth-tabs button:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tabs button.active {
+            color: white;
+            border-bottom: 2px solid #ff007a;
+            background-color: rgba(255, 0, 122, 0.1);
+        }
+
+        .modal .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal .tab-content.active {
+            display: flex;
+        }
+
+        .modal .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #2c2c2c;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .modal input:focus {
+            border-color: #ff007a;
+            outline: none;
+        }
+
+        .modal .social-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background-color: #2c2c2c;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .social-btn:hover {
+            background-color: #3a3a3a;
+            transform: translateY(-2px);
+        }
+
+        .social-btn img {
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        .modal .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .modal .remember-me input {
+            width: auto;
+            margin: 0;
+            padding: 0;
+        }
+
+        .modal button[type="submit"] {
+            padding: 14px 20px;
+            background-color: #ff007a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.2s;
+            position: relative;
+        }
+
+        .modal button[type="submit"]:hover {
+            background-color: #e6006c;
+            transform: translateY(-2px);
+        }
+
+        .modal button[type="submit"].loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-top: 3px solid #ff007a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .modal .forgot-password,
+        .modal .register-link {
+            font-size: 0.9rem;
+            color: #999;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .modal .forgot-password a,
+        .modal .register-link a {
+            color: #ff007a;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .modal .forgot-password a:hover,
+        .modal .register-link a:hover {
+            color: #e6006c;
+        }
+
+        .footer {
+            background: #1a1a1a;
+            padding: 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer a {
+            color: #ffcc00;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #e6b800;
+        }
+
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-profile .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: #2c2c2c;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            min-width: 150px;
+            z-index: 1000;
+        }
+
+        .user-profile:hover .dropdown {
+            display: block;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown a:hover {
+            background-color: #3a3a3a;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background: #1a1a1a;
+                padding: 15px;
+                border-radius: 5px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .voice-container {
+                padding: 15px;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 85%;
+                padding: 25px;
+            }
+
+            .auth-tabs button {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+
+            .hero {
+                margin-top: 80px;
+            }
+
+            .ai-agents-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .ai-agents-diagram {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="logo.svg" alt="Eleven Labs Logo">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#ai-audio">AI Audio</a></li>
+                    <li><a href="#solutions">Solutions</a></li>
+                    <li><a href="https://elevenlabs.io/docs">Docs</a></li>
+                    <li><a href="/pricing">Pricing</a></li>
+                    <li><a href="/enterprise">Enterprise</a></li>
+                    <li><a href="#company">Company</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div class="user-profile" id="user-profile">
+                        <span>Guest</span>
+                        <div class="dropdown">
+                            <a href="#" id="logout">Logout</a>
+                            <a href="#">Settings</a>
+                        </div>
+                    </div>
+                    <a href="/app/home" class="btn">Go to app</a>
+                    <button class="menu-toggle" aria-label="Open menu">
+                        <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke="currentColor" stroke-width="1.5" d="M2 6h20M2 12h20M2 18h20"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <section class="hero">
+        <h1>Create the most realistic speech with our AI audio platform</h1>
+        <p>Pioneering research in Text to Speech, AI Voice Generator, and more</p>
+        <a href="#" class="cta-button" id="get-started">GET STARTED FREE</a>
+    </section>
+
+    <!-- Sign In/Sign Up Modal (Integrated) -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="sign-in">Sign In</button>
+                <button class="tab-btn" data-tab="sign-up">Sign Up</button>
+            </div>
+
+            <div id="sign-in" class="tab-content active">
+                <form class="auth-form">
+                    <input type="text" id="sign-in-username" placeholder="Email ID / Username" required>
+                    <span id="username-error" class="error text-red-500 hidden"></span>
+                    <input type="password" id="sign-in-password" placeholder="Password" required>
+                    <span id="password-error" class="error text-red-500 hidden"></span>
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">Remember me</label>
+                    </div>
+                    <div class="social-buttons">
+                        <button class="social-btn" id="google-signin">
+                            <img src="https://img.icons8.com/color/20/000000/google-logo.png" alt="Google">
+                            Sign in with Google
+                        </button>
+                        <button class="social-btn" id="facebook-signin">
+                            <img src="https://img.icons8.com/color/20/000000/facebook-new.png" alt="Facebook">
+                            Sign in with Facebook
+                        </button>
+                    </div>
+                    <button type="submit" id="sign-in-submit">Login</button>
+                    <p class="forgot-password"><a href="#">Forgot password?</a></p>
+                </form>
+            </div>
+
+            <div id="sign-up" class="tab-content">
+                <form class="auth-form">
+                    <input type="email" id="sign-up-email" placeholder="Email Address" required>
+                    <span id="email-error" class="error text-red-500 hidden"></span>
+                    <input type="password" id="sign-up-password" placeholder="Password" required>
+                    <span id="password-signup-error" class="error text-red-500 hidden"></span>
+                    <input type="text" id="sign-up-name" placeholder="Full Name" required>
+                    <span id="name-error" class="error text-red-500 hidden"></span>
+                    <div class="social-buttons">
+                        <button class="social-btn" id="google-signup">
+                            <img src="https://img.icons8.com/color/20/000000/google-logo.png" alt="Google">
+                            Sign up with Google
+                        </button>
+                        <button class="social-btn" id="facebook-signup">
+                            <img src="https://img.icons8.com/color/20/000000/facebook-new.png" alt="Facebook">
+                            Sign up with Facebook
+                        </button>
+                    </div>
+                    <button type="submit" id="sign-up-submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Cloning Interface -->
+    <div class="voice-container">
+        <div class="nav-buttons-voice">
+            <button class="nav-btn-voice" data-section="text-to-speech">Text to Speech</button>
+            <button class="nav-btn-voice" data-section="speech-to-text">Speech to Text</button>
+            <button class="nav-btn-voice" data-section="voice-changer">Voice Changer</button>
+            <button class="nav-btn-voice" data-section="dubbing">Dubbing</button>
+            <button class="nav-btn-voice" data-section="text-to-sfx">Text to SFX</button>
+            <button class="nav-btn-voice" data-section="voice-cloning">Voice Cloning</button>
+            <button class="nav-btn-voice" data-section="create-clone" id="create-clone-btn">Create New Clone</button>
+        </div>
+
+        <div class="sections">
+            <div class="section text-to-speech-section" data-section="text-to-speech">
+                <h2>Text to Speech</h2>
+                <textarea id="tts-input" placeholder="Enter text here..."></textarea>
+                <button id="tts-submit">Submit</button>
+                <audio id="tts-audio" controls class="mt-2 hidden"></audio>
+            </div>
+            <div class="section speech-to-text-section" data-section="speech-to-text">
+                <h2>Speech to Text</h2>
+                <button id="start-recording">Start Recording</button>
+                <p id="stt-output">Transcription will appear here...</p>
+            </div>
+            <div class="section voice-changer-section" data-section="voice-changer">
+                <h2>Voice Changer</h2>
+                <select id="voice-effect">
+                    <option value="robot">Robot</option>
+                    <option value="alien">Alien</option>
+                </select>
+                <button id="apply-voice">Apply</button>
+                <audio id="voice-changer-audio" controls class="mt-2 hidden"></audio>
+            </div>
+            <div class="section dubbing-section" data-section="dubbing">
+                <h2>Dubbing</h2>
+                <input type="file" id="dubbing-file" accept="audio/*">
+                <button id="dubbing-submit">Dub</button>
+                <audio id="dubbing-audio" controls class="mt-2 hidden"></audio>
+            </div>
+            <div class="section text-to-sfx-section" data-section="text-to-sfx">
+                <h2>Text to SFX</h2>
+                <textarea id="sfx-input" placeholder="Enter text for SFX..."></textarea>
+                <button id="sfx-submit">Generate SFX</button>
+                <audio id="sfx-audio" controls class="mt-2 hidden"></audio>
+            </div>
+            <div class="section voice-cloning-section" data-section="voice-cloning">
+                <div class="voice-rows">
+                    <div class="row">
+                        <div class="profile original">
+                            <img src="https://via.placeholder.com/50" alt="Lily">
+                            <span>Lily</span>
+                            <span>ORIGINAL</span>
+                        </div>
+                        <button class="play-btn" data-audio="sample1.mp3">></button>
+                        <div class="profile clone">
+                            <div class="clone-icon" style="background: linear-gradient(45deg, #00ffcc, #00ccff);"></div>
+                            <span>Lily</span>
+                            <span>CLONE</span>
+                        </div>
+                        <button class="play-btn" data-audio="clone1.mp3">></button>
+                    </div>
+
+                    <div class="row">
+                        <div class="profile original">
+                            <img src="https://via.placeholder.com/50" alt="Chris">
+                            <span>Chris</span>
+                            <span>ORIGINAL</span>
+                        </div>
+                        <button class="play-btn" data-audio="sample2.mp3">></button>
+                        <div class="profile clone">
+                            <div class="clone-icon" style="background: linear-gradient(45deg, #ff00cc, #cc00ff);"></div>
+                            <span>Chris</span>
+                            <span>CLONE</span>
+                        </div>
+                        <button class="play-btn" data-audio="clone2.mp3">></button>
+                    </div>
+
+                    <div class="row">
+                        <div class="profile original">
+                            <img src="https://via.placeholder.com/50" alt="Laura">
+                            <span>Laura</span>
+                            <span>ORIGINAL</span>
+                        </div>
+                        <button class="play-btn" data-audio="sample3.mp3">></button>
+                        <div class="profile clone">
+                            <div class="clone-icon" style="background: linear-gradient(45deg, #ffcc00, #ff6600);"></div>
+                            <span>Laura</span>
+                            <span>CLONE</span>
+                        </div>
+                        <button class="play-btn" data-audio="clone3.mp3">></button>
+                    </div>
+                </div>
+            </div>
+            <div class="section create-clone-section hidden" data-section="create-clone">
+                <h2>Create New Voice Clone</h2>
+                <form id="clone-form">
+                    <input type="text" id="clone-name" placeholder="Clone Name" required>
+                    <input type="file" id="clone-audio" accept="audio/*" required>
+                    <button type="submit" id="submit-clone">Create Clone</button>
+                </form>
+                <p id="clone-message" class="mt-2 text-green-500 hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- New AI Agents Section -->
+    <section class="ai-agents-section">
+        <div class="ai-agents-text">
+            <h2>DEVELOPERS</h2>
+            <h2>Build AI Agents that speak</h2>
+            <p>Add voice to your agents on web, mobile or telephony in minutes. Our Conversational AI platform delivers
+                low latency, full configurability, and seamless scalability.</p>
+            <div class="ai-agents-buttons">
+                <button>Conversational AI</button>
+                <button>Contact Sales</button>
+            </div>
+        </div>
+        <div class="ai-agents-diagram">
+            <svg width="300" height="200">
+                <circle cx="50" cy="100" r="30" fill="white" />
+                <text x="50" y="100" text-anchor="middle" dy=".3em" fill="black">USER</text>
+                <circle cx="150" cy="100" r="30" fill="white" />
+                <text x="150" y="100" text-anchor="middle" dy=".3em" fill="black">SPEECH TO TEXT</text>
+                <circle cx="250" cy="100" r="30" fill="white" />
+                <text x="250" y="100" text-anchor="middle" dy=".3em" fill="black">TEXT TO SPEECH</text>
+                <circle cx="250" cy="150" r="20" fill="white" />
+                <text x="250" y="150" text-anchor="middle" dy=".3em" fill="black">AGENT</text>
+                <circle cx="250" cy="50" r="20" fill="white" />
+                <text x="250" y="50" text-anchor="middle" dy=".3em" fill="black">LLM</text>
+                <path d="M80 100 Q125 100 180 100" stroke="black" fill="transparent" />
+                <path d="M180 100 Q225 100 245 100" stroke="black" fill="transparent" />
+                <text x="200" y="160" fill="#666" font-size="10">FUNCTION CALLING</text>
+                <text x="200" y="170" fill="#666" font-size="10">MONITORING</text>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Contact</a>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.menu-toggle').addEventListener('click', function () {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Handle "GET STARTED FREE" click to show auth modal
+        document.querySelector('.cta-button').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('auth-modal').style.display = 'block';
+        });
+
+        // Handle auth tabs (Sign In / Sign Up)
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelector('.tab-btn.active').classList.remove('active');
+                this.classList.add('active');
+                document.querySelector('.tab-content.active').classList.remove('active');
+                document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+
+                const modalHeader = document.querySelector('.modal h2');
+                if (this.getAttribute('data-tab') === 'sign-in') {
+                    modalHeader.textContent = 'Login';
+                } else {
+                    modalHeader.textContent = 'Sign Up';
+                }
+            });
+        });
+
+        // Ensure only the default tab content is visible on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('sign-in').classList.add('active');
+            updateUserProfile();
+        });
+
+        // Form validation and submission
+        const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const validatePassword = (password) => password.length >= 6;
+
+        document.getElementById('sign-in-submit').addEventListener('click', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('sign-in-username').value;
+            const password = document.getElementById('sign-in-password').value;
+            const usernameError = document.getElementById('username-error');
+            const passwordError = document.getElementById('password-error');
+
+            usernameError.classList.add('hidden');
+            passwordError.classList.add('hidden');
+
+            if (!username.trim()) {
+                usernameError.textContent = 'Username/Email is required';
+                usernameError.classList.remove('hidden');
+                return;
+            }
+            if (!validatePassword(password)) {
+                passwordError.textContent = 'Password must be at least 6 characters';
+                passwordError.classList.remove('hidden');
+                return;
+            }
+
+            this.classList.add('loading');
+            setTimeout(() => {
+                this.classList.remove('loading');
+                alert(`Successfully signed in with ${username}`);
+                localStorage.setItem('user', JSON.stringify({ username }));
+                document.getElementById('auth-modal').style.display = 'none';
+                updateUserProfile();
+            }, 1000);
+        });
+
+        document.getElementById('sign-up-submit').addEventListener('click', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('sign-up-email').value;
+            const password = document.getElementById('sign-up-password').value;
+            const name = document.getElementById('sign-up-name').value;
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('password-signup-error');
+            const nameError = document.getElementById('name-error');
+
+            emailError.classList.add('hidden');
+            passwordError.classList.add('hidden');
+            nameError.classList.add('hidden');
+
+            if (!validateEmail(email)) {
+                emailError.textContent = 'Valid email is required';
+                emailError.classList.remove('hidden');
+                return;
+            }
+            if (!validatePassword(password)) {
+                passwordError.textContent = 'Password must be at least 6 characters';
+                passwordError.classList.remove('hidden');
+                return;
+            }
+            if (!name.trim()) {
+                nameError.textContent = 'Name is required';
+                nameError.classList.remove('hidden');
+                return;
+            }
+
+            this.classList.add('loading');
+            setTimeout(() => {
+                this.classList.remove('loading');
+                alert(`Successfully signed up with email: ${email} and name: ${name}`);
+                localStorage.setItem('user', JSON.stringify({ username: email, name }));
+                document.getElementById('auth-modal').style.display = 'none';
+                updateUserProfile();
+            }, 1000);
+        });
+
+        // Social sign-in (simulated)
+        ['google-signin', 'facebook-signin', 'google-signup', 'facebook-signup'].forEach(id => {
+            document.getElementById(id).addEventListener('click', function () {
+                this.classList.add('loading');
+                setTimeout(() => {
+                    this.classList.remove('loading');
+                    const platform = this.id.split('-')[0];
+                    alert(`Signing ${platform === 'google' || platform === 'facebook' ? 'in' : 'up'} with ${platform}...`);
+                    document.getElementById('auth-modal').style.display = 'none';
+                    updateUserProfile();
+                }, 1000);
+            });
+        });
+
+        // Update user profile
+        function updateUserProfile() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const profile = document.getElementById('user-profile');
+            if (user) {
+                profile.querySelector('span').textContent = user.name || user.username;
+                document.querySelector('.cta-button').style.display = 'none';
+            } else {
+                profile.querySelector('span').textContent = 'Guest';
+                document.querySelector('.cta-button').style.display = 'inline-block';
+            }
+        }
+
+        document.getElementById('logout').addEventListener('click', function (e) {
+            e.preventDefault();
+            localStorage.removeItem('user');
+            updateUserProfile();
+            alert('Logged out successfully');
+        });
+
+        // Handle navigation button clicks for voice sections
+        document.querySelectorAll('.nav-btn-voice').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.nav-btn-voice.active')?.classList.remove('active');
+                document.querySelector('.section.active')?.classList.remove('active');
+                btn.classList.add('active');
+                const sectionId = btn.getAttribute('data-section');
+                const section = document.querySelector(`.section[data-section="${sectionId}"]`);
+                if (section) {
+                    section.classList.add('active');
+                }
+            });
+        });
+
+        // Initially show the "Voice Cloning" section
+        document.querySelector('.nav-btn-voice[data-section="voice-cloning"]').click();
+
+        // Audio playback for voice samples
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const audioUrl = btn.getAttribute('data-audio');
+                if (audioUrl) {
+                    try {
+                        const response = await fetch(audioUrl);
+                        const arrayBuffer = await response.arrayBuffer();
+                        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                        const source = audioContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.connect(audioContext.destination);
+                        source.start();
+                    } catch (error) {
+                        alert('Error playing audio: ' + error.message);
+                    }
+                } else {
+                    alert('Audio file not found');
+                }
+            });
+        });
+
+        // Text to Speech
+        document.getElementById('tts-submit').addEventListener('click', () => {
+            const text = document.getElementById('tts-input').value;
+            if (text.trim() === '') {
+                alert('Please enter some text for Text to Speech!');
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+            document.getElementById('tts-audio').classList.remove('hidden');
+            // Note: This is a placeholder; real implementation would require a TTS API
+            document.getElementById('tts-audio').src = URL.createObjectURL(new Blob([new Uint8Array()], { type: 'audio/wav' }));
+        });
+
+        // Speech to Text (basic implementation)
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        document.getElementById('start-recording').addEventListener('click', () => {
+            recognition.start();
+            document.getElementById('stt-output').textContent = 'Listening...';
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('stt-output').textContent = `Transcription: ${transcript}`;
+        };
+
+        recognition.onerror = () => {
+            document.getElementById('stt-output').textContent = 'Error occurred during recording.';
+        };
+
+        // Voice Changer (simulated)
+        document.getElementById('apply-voice').addEventListener('click', () => {
+            const effect = document.getElementById('voice-effect').value;
+            alert(`Applying ${effect} voice effect...`);
+            document.getElementById('voice-changer-audio').classList.remove('hidden');
+            // Simulated audio URL; replace with actual file or API
+            document.getElementById('voice-changer-audio').src = `sample-${effect}.mp3`;
+        });
+
+        // Dubbing
+        document.getElementById('dubbing-submit').addEventListener('click', () => {
+            const file = document.getElementById('dubbing-file').files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('dubbing-audio').classList.remove('hidden');
+                document.getElementById('dubbing-audio').src = url;
+                alert('Dubbing audio file...');
+            } else {
+                alert('Please select an audio file!');
+            }
+        });
+
+        // Text to SFX
+        document.getElementById('sfx-submit').addEventListener('click', () => {
+            const text = document.getElementById('sfx-input').value;
+            if (text.trim() === '') {
+                alert('Please enter text for SFX generation!');
+                return;
+            }
+            alert(`Generating SFX from text: "${text}"...`);
+            document.getElementById('sfx-audio').classList.remove('hidden');
+            // Simulated audio URL; replace with actual file or API
+            document.getElementById('sfx-audio').src = 'sample-sfx.mp3';
+        });
+
+        // Create New Clone
+        document.getElementById('create-clone-btn').addEventListener('click', () => {
+            document.querySelector('.nav-btn-voice.active')?.classList.remove('active');
+            document.querySelector('.section.active')?.classList.remove('active');
+            document.getElementById('create-clone-btn').classList.add('active');
+            document.querySelector('.create-clone-section').classList.add('active');
+        });
+
+        document.getElementById('clone-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('clone-name').value;
+            const file = document.getElementById('clone-audio').files[0];
+            if (name.trim() && file) {
+                document.getElementById('submit-clone').classList.add('loading');
+                setTimeout(() => {
+                    document.getElementById('submit-clone').classList.remove('loading');
+                    document.getElementById('clone-message').textContent = `Clone "${name}" created successfully!`;
+                    document.getElementById('clone-message').classList.remove('hidden');
+                    this.reset();
+                }, 1000);
+            } else {
+                alert('Please fill all fields!');
+            }
+        });
+
+        // Close modal if clicked outside
+        window.addEventListener('click', function (event) {
+            const modal = document.getElementById('auth-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
